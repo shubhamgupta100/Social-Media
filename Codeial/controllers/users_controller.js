@@ -1,10 +1,23 @@
 const User = require('../models/user');
 
 module.exports.profile=function(req,res){
+
+   if(req.cookies.user_id){
+      User.findById(req.cookies.user_id,function(err,user){
+         if(user){
+            return res.render('user_profile',{
+               title:"Profile Page",
+               user:user
+            });
+         }
+         return res.redirect('users/sign-in');
+      })
+
+   }else{
+      return res.redirect('/users/sign-in');
+   }
    // return res.end('<h1>Profile Page/Codeial</h1>');
-   return res.render('user_profile',{
-      title:"Profile Page"
-   });
+   
 }
 // rendering signup pAGE TO BROWSER
 
@@ -48,8 +61,19 @@ module.exports.create=function(req,res){
       });
 }
 // get sign in data and create session for sign in
-module.exports.createSSession = function(req,res){
+module.exports.createSession = function(req,res){
    
-   
-
+   // find the user
+   User.findOne({email:req.body.email},function(err,user){
+      if(err){console.log("Eroor in sign in");return}
+      if(user){
+            if(user.password!=req.body.password){
+               return res.redirect('back');
+            }
+            res.cookie('user_id',user.id);
+            return res.redirect('/users/profile');
+      }else{
+            return res.redirect('back');
+      }
+   });
 }
