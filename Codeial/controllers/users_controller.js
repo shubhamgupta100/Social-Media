@@ -1,6 +1,7 @@
 const User = require('../models/user');
 
-module.exports.profile=function(req,res){
+// There is no nesting so no need to change in async await
+module.exports.profile= function(req,res){
    // return res.end('<h1>Profile Page/Codeial</h1>');
    User.findById(req.params.id,function(err,user){
       return res.render('user_profile',{
@@ -11,6 +12,8 @@ module.exports.profile=function(req,res){
   
 }
 
+// There is no nesting so no need to change in async await
+
 module.exports.update= function(req,res){
    if(req.user.id==req.params.id){
       User.findByIdAndUpdate(req.params.id,req.body,function(err,user){
@@ -20,6 +23,9 @@ module.exports.update= function(req,res){
       return res.status(401).send('Unauthorized');
    }
 }
+
+
+
 // rendering signup pAGE TO BROWSER
 
 module.exports.signUp = function(req,res){
